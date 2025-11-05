@@ -10,27 +10,35 @@ import gdown
 st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
 
 # ==========================
-# DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
+# CARGAR DATOS CON DESCARGA AUTOMÁTICA
 # ==========================
-drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
-local_path = "data/registro_def.csv"
+@st.cache_data
+def obtener_dataset():
+    local_path = "data/registro_def.csv"
+    os.makedirs("data", exist_ok=True)
 
-# Crear carpeta 'data/' si no existe
-os.makedirs("data", exist_ok=True)
-
-# Intentar descargar
-try:
     if not os.path.exists(local_path):
-        st.info("Descargando dataset desde Google Drive...")
-        gdown.download(drive_url, local_path, quiet=False)
-        st.success("Dataset descargado correctamente.")
-except Exception as e:
-    st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
-    archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
-    if archivo_manual:
-        with open(local_path, "wb") as f:
-            f.write(archivo_manual.getbuffer())
-        st.success("Archivo subido correctamente.")
+        try:
+            drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
+            gdown.download(drive_url, local_path, quiet=False)
+        except Exception:
+            st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
+            archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
+            if archivo_manual:
+                with open(local_path, "wb") as f:
+                    f.write(archivo_manual.getbuffer())
+                st.success("Archivo subido correctamente.")
+
+    return pd.read_csv(local_path)
+
+with st.spinner("Cargando datos..."):
+    df = obtener_dataset()
+
+# Validar columnas esperadas
+expected_columns = {"ejercicio", "grupo_muscular", "peso", "serie", "repeticiones", "semana"}
+if not expected_columns.issubset(df.columns):
+    st.error("El archivo cargado no tiene las columnas necesarias.")
+    st.stop()
 
 # ==========================
 # IMPORTAR FUNCIONES EXTERNAS
@@ -50,7 +58,6 @@ from scripts.predicciones import (
 # SIDEBAR: Navegación y filtros
 # ==========================
 st.sidebar.title("📊 Panel de control")
-
 vista = st.sidebar.radio("Selecciona vista:", ["1️⃣ Carga de datos", "2️⃣ Análisis EDA", "3️⃣ Predicciones"])
 
 # ==========================
@@ -64,7 +71,6 @@ if vista == "1️⃣ Carga de datos":
         st.success("Archivo cargado correctamente")
         st.dataframe(pd.read_csv(archivo).head())
 
-        # Inputs del usuario
         peso = st.number_input("Peso utilizado (kg)", min_value=0)
         serie = st.number_input("Series", min_value=1)
         repeticiones = st.number_input("Repeticiones", min_value=1)
@@ -96,30 +102,6 @@ if vista == "1️⃣ Carga de datos":
     st.stop()
 
 # ==========================
-# CARGAR DATOS PARA VISTA 2 Y 3
-# ==========================
-@st.cache_data
-def obtener_dataset():
-    local_path = "data/registro_def.csv"
-    os.makedirs("data", exist_ok=True)
-
-    if not os.path.exists(local_path):
-        try:
-            drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
-            gdown.download(drive_url, local_path, quiet=False)
-        except Exception:
-            st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
-            archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
-            if archivo_manual:
-                with open(local_path, "wb") as f:
-                    f.write(archivo_manual.getbuffer())
-                st.success("Archivo subido correctamente.")
-
-    return pd.read_csv(local_path)
-
-# ✅ Usar el dataset
-df = obtener_dataset()
-# ==========================
 # FILTROS COMUNES
 # ==========================
 st.sidebar.header("Filtros")
@@ -134,7 +116,6 @@ peso_min, peso_max = st.sidebar.slider("Peso (kg):", int(df["peso"].min()), int(
 serie_min, serie_max = st.sidebar.slider("Series:", int(df["serie"].min()), int(df["serie"].max()), (1, int(df["serie"].max())))
 repe_min, repe_max = st.sidebar.slider("Repeticiones:", int(df["repeticiones"].min()), int(df["repeticiones"].max()), (1, int(df["repeticiones"].max())))
 
-# Aplicar filtros
 df_filtrado = df.copy()
 if ejercicio != "Todos":
     df_filtrado = df_filtrado[df_filtrado["ejercicio"] == ejercicio]
@@ -156,22 +137,18 @@ df_filtrado = df_filtrado[
 if vista == "2️⃣ Análisis EDA":
     col1, col2 = st.columns([1, 3])
 
-    # --- IMAGEN CORPORAL POR EJERCICIO ---
     with col1:
         st.markdown("### 🧍 Vista corporal por ejercicio")
         if ejercicio != "Todos":
             ejercicio_archivo = ejercicio.lower().replace(" ", "_").replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
             carpeta_sexo = "female" if sexo == "Mujer" else "male"
 
-            # Mostrar frontal y trasera en paralelo
             col_img1, col_img2 = st.columns(2)
-
             ruta_frontal = f"assets/{carpeta_sexo}/{ejercicio_archivo}_f.png"
             ruta_trasera = f"assets/{carpeta_sexo}/{ejercicio_archivo}_t.png"
             ruta_simple = f"assets/{carpeta_sexo}/{ejercicio_archivo}.png"
 
             mostrado = False
-
             if os.path.exists(ruta_frontal):
                 col_img1.image(Image.open(ruta_frontal), caption=f"{ejercicio} (frontal)")
                 mostrado = True
@@ -186,7 +163,6 @@ if vista == "2️⃣ Análisis EDA":
         else:
             st.info("Selecciona un ejercicio para mostrar la zona entrenada.")
 
-    # --- DASHBOARD EDA ---
     with col2:
         st.markdown("## 📈 Dashboard EDA")
         resumen_ejercicios(df_filtrado)
@@ -216,11 +192,8 @@ if vista == "3️⃣ Predicciones":
         prediccion1(df_filtrado)
         prediccion2(df_filtrado)
         prediccion3(df_filtrado)
+
     with col2:
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
-
-
-
-
