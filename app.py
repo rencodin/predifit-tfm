@@ -99,11 +99,26 @@ if vista == "1️⃣ Carga de datos":
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
 @st.cache_data
-def cargar_datos():
-    return pd.read_csv("data/registro_def.csv")
+def obtener_dataset():
+    local_path = "data/registro_def.csv"
+    os.makedirs("data", exist_ok=True)
 
-df = cargar_datos()
+    if not os.path.exists(local_path):
+        try:
+            drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
+            gdown.download(drive_url, local_path, quiet=False)
+        except Exception:
+            st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
+            archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
+            if archivo_manual:
+                with open(local_path, "wb") as f:
+                    f.write(archivo_manual.getbuffer())
+                st.success("Archivo subido correctamente.")
 
+    return pd.read_csv(local_path)
+
+# ✅ Usar el dataset
+df = obtener_dataset()
 # ==========================
 # FILTROS COMUNES
 # ==========================
@@ -205,6 +220,7 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
 
 
 
