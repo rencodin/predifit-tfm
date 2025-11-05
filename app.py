@@ -2,11 +2,23 @@ import streamlit as st
 import pandas as pd
 import os
 from PIL import Image
+import gdown
 
 # ==========================
 # CONFIGURACIÓN GENERAL
 # ==========================
 st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
+
+# ==========================
+# DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
+# ==========================
+drive_url = "https://drive.google.com/uc?id=10lO_ac1PQuV_EnH1ETDs1sIzOC5bTp30"
+local_path = "data/registro_def.csv"
+
+if not os.path.exists(local_path):
+    st.info("Descargando dataset desde Google Drive...")
+    gdown.download(drive_url, local_path, quiet=False)
+    st.success("Dataset descargado correctamente.")
 
 # ==========================
 # IMPORTAR FUNCIONES EXTERNAS
