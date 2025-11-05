@@ -10,35 +10,27 @@ import gdown
 st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
 
 # ==========================
-# CARGAR DATOS CON DESCARGA AUTOMÁTICA
+# DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
 # ==========================
-@st.cache_data
-def obtener_dataset():
-    local_path = "data/registro_def.csv"
-    os.makedirs("data", exist_ok=True)
+drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
+local_path = "data/registro_def.csv"
 
+# Crear carpeta 'data/' si no existe
+os.makedirs("data", exist_ok=True)
+
+# Intentar descargar
+try:
     if not os.path.exists(local_path):
-        try:
-            drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
-            gdown.download(drive_url, local_path, quiet=False)
-        except Exception:
-            st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
-            archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
-            if archivo_manual:
-                with open(local_path, "wb") as f:
-                    f.write(archivo_manual.getbuffer())
-                st.success("Archivo subido correctamente.")
-
-    return pd.read_csv(local_path)
-
-with st.spinner("Cargando datos..."):
-    df = obtener_dataset()
-
-# Validar columnas esperadas
-expected_columns = {"ejercicio", "grupo_muscular", "peso", "serie", "repeticiones", "semana"}
-if not expected_columns.issubset(df.columns):
-    st.error("El archivo cargado no tiene las columnas necesarias.")
-    st.stop()
+        st.info("Descargando dataset desde Google Drive...")
+        gdown.download(drive_url, local_path, quiet=False)
+        st.success("Dataset descargado correctamente.")
+except Exception as e:
+    st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
+    archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
+    if archivo_manual:
+        with open(local_path, "wb") as f:
+            f.write(archivo_manual.getbuffer())
+        st.success("Archivo subido correctamente.")
 
 # ==========================
 # IMPORTAR FUNCIONES EXTERNAS
@@ -100,6 +92,11 @@ if vista == "1️⃣ Carga de datos":
             st.dataframe(df_transformado.head())
 
     st.stop()
+
+# ==========================
+# CARGAR DATOS PARA VISTA 2 Y 3
+# ==========================
+df = pd.read_csv("data/registro_def.csv")
 
 # ==========================
 # FILTROS COMUNES
@@ -192,7 +189,6 @@ if vista == "3️⃣ Predicciones":
         prediccion1(df_filtrado)
         prediccion2(df_filtrado)
         prediccion3(df_filtrado)
-
     with col2:
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
