@@ -18,11 +18,19 @@ local_path = "data/registro_def.csv"
 # Crear carpeta 'data/' si no existe
 os.makedirs("data", exist_ok=True)
 
-# Descargar si el archivo no existe
-if not os.path.exists(local_path):
-    st.info("Descargando dataset desde Google Drive...")
-    gdown.download(drive_url, local_path, quiet=False)
-    st.success("Dataset descargado correctamente.")
+# Intentar descargar
+try:
+    if not os.path.exists(local_path):
+        st.info("Descargando dataset desde Google Drive...")
+        gdown.download(drive_url, local_path, quiet=False)
+        st.success("Dataset descargado correctamente.")
+except Exception as e:
+    st.warning("No se pudo descargar el archivo automáticamente. Puedes subirlo manualmente abajo.")
+    archivo_manual = st.file_uploader("Sube el archivo registro_def.csv", type=["csv"])
+    if archivo_manual:
+        with open(local_path, "wb") as f:
+            f.write(archivo_manual.getbuffer())
+        st.success("Archivo subido correctamente.")
 
 # ==========================
 # IMPORTAR FUNCIONES EXTERNAS
@@ -197,5 +205,6 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
 
 
