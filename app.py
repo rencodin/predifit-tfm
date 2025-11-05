@@ -12,7 +12,7 @@ st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
 # ==========================
 # DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
 # ==========================
-drive_url = "https://drive.google.com/uc?id=10lO_ac1PQuV_EnH1ETDs1sIzOC5bTp30"
+drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
 local_path = "data/registro_def.csv"
 
 if not os.path.exists(local_path):
@@ -193,3 +193,4 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
