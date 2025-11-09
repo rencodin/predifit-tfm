@@ -58,6 +58,7 @@ vista = st.sidebar.radio("Selecciona vista:", ["1️⃣ Carga de datos", "2️�
 if vista == "1️⃣ Carga de datos":
     st.title("📥 Carga de datos del reloj")
 
+    st.subheader("📂 Opción 1: Subir y procesar archivo manualmente")
     archivo = st.file_uploader("Sube tu archivo CSV del reloj", type=["csv"])
     if archivo:
         st.success("Archivo cargado correctamente")
@@ -90,6 +91,17 @@ if vista == "1️⃣ Carga de datos":
             df_transformado = transformar_dataset()
             st.success("Transformación completada")
             st.dataframe(df_transformado.head())
+
+    st.markdown("---")
+    st.subheader("📄 Opción 2: Usar directamente el dataset descargado")
+
+    if st.button("Mostrar dataset registro_def_st.csv"):
+        try:
+            df_directo = pd.read_csv("data/registro_def_st.csv")
+            st.success("Dataset cargado correctamente.")
+            st.dataframe(df_directo.head())
+        except Exception as e:
+            st.error(f"No se pudo cargar el archivo: {e}")
 
     st.stop()
 
@@ -193,4 +205,5 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
 
