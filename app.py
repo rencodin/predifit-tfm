@@ -12,8 +12,8 @@ st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
 # ==========================
 # DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
 # ==========================
-drive_url = "https://drive.google.com/uc?id=1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
-local_path = "data/registro_def.csv"
+drive_url = "https://drive.google.com/1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP"
+local_path = "data/registro_def_st.csv"
 
 # Crear carpeta 'data/' si no existe
 os.makedirs("data", exist_ok=True)
@@ -96,7 +96,7 @@ if vista == "1️⃣ Carga de datos":
 # ==========================
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
-df = pd.read_csv("data/registro_def.csv")
+df = pd.read_csv("data/registro_def_st.csv")
 
 # ==========================
 # FILTROS COMUNES
@@ -193,3 +193,4 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
