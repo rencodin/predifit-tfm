@@ -108,7 +108,17 @@ if vista == "1️⃣ Carga de datos":
 # ==========================
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
-df = pd.read_csv("data/registro_def_st.csv")
+try:
+    df = pd.read_csv("data/registro_def_st.csv")
+    columnas_necesarias = {"ejercicio", "grupo_muscular", "peso", "serie", "repeticiones", "semana"}
+    if not columnas_necesarias.issubset(df.columns):
+        st.error("❌ El archivo cargado no contiene todas las columnas necesarias.")
+        st.write("Columnas encontradas:", df.columns.tolist())
+        st.stop()
+except Exception as e:
+    st.error(f"No se pudo cargar el archivo: {e}")
+    st.stop()
+
 
 # ==========================
 # FILTROS COMUNES
@@ -205,5 +215,6 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
+
 
 
