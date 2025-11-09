@@ -12,13 +12,10 @@ st.set_page_config(page_title="Dashboard Entrenamiento", layout="wide")
 # ==========================
 # DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE
 # ==========================
-drive_url = "https://drive.google.com/1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP"
+drive_url = "https://drive.google.com/uc?id=1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP"
 local_path = "data/registro_def_st.csv"
-
-# Crear carpeta 'data/' si no existe
 os.makedirs("data", exist_ok=True)
 
-# Intentar descargar
 try:
     if not os.path.exists(local_path):
         st.info("Descargando dataset desde Google Drive...")
@@ -119,7 +116,6 @@ except Exception as e:
     st.error(f"No se pudo cargar el archivo: {e}")
     st.stop()
 
-
 # ==========================
 # FILTROS COMUNES
 # ==========================
@@ -215,6 +211,3 @@ if vista == "3️⃣ Predicciones":
         prediccion4(df_filtrado)
         prediccion5(df_filtrado)
         prediccion6(df_filtrado)
-
-
-
