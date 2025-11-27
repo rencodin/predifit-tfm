@@ -54,6 +54,9 @@ def prediccion1(df):
         st.warning("No hay columnas suficientes para entrenar el modelo de carga.")
         return
 
+    ejercicio_nombre = st.selectbox("Ejercicio", sorted(ejercicios_dict.keys()), key="nombre_ejercicio_pred2")
+    ejercicio_id = ejercicios_dict[ejercicio_nombre]
+    
     semana = st.number_input("Semana", min_value=1, max_value=52, value=10)
     ejercicio_id = st.selectbox("ID del ejercicio", sorted(df["id_ejercicio"].dropna().unique()))
     repeticiones = st.number_input("Repeticiones", min_value=1, max_value=50, value=12)
@@ -305,5 +308,6 @@ def prediccion6(df):
 
     📌 *Recuerda: estas predicciones son una guía, pero no sustituyen la supervisión profesional.*
     """)
+
 
 
