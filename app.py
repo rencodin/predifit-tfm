@@ -81,7 +81,7 @@ def cargar_csv_drive(file_id: str):
 
 # IDs de tus archivos en Google Drive (cámbialos por los tuyos)
 FILE_ID_REGISTRO = "1mnY7l-2eOWwnF-4b7GaVzh5dWiAI4RYR"
-FILE_ID_REGISTRO_DEF = "1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP-"
+FILE_ID_REGISTRO_DEF = "1DOmzXX6snvE7ccHIFQk-QhYlnaohWQLo"
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -274,6 +274,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
