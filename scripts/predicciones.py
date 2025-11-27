@@ -54,14 +54,12 @@ def prediccion1(df):
         st.warning("No hay columnas suficientes para entrenar el modelo de carga.")
         return
 
-    # Inputs interactivos
-    semana = st.number_input("Semana", min_value=1, max_value=52, value=10)
-
     # Mostrar nombres de ejercicios en el selectbox
     ejercicio_nombre = st.selectbox("Ejercicio", sorted(ejercicios_dict.keys()))
     ejercicio_id = ejercicios_dict[ejercicio_nombre]
 
     repeticiones = st.number_input("Repeticiones", min_value=1, max_value=50, value=12)
+    semana = st.number_input("Semana", min_value=1, max_value=52, value=10)
 
     pred = model.predict([[semana, ejercicio_id, repeticiones]])[0]
     st.metric(label="Peso estimado", value=f"{pred:.2f} kg")
@@ -310,6 +308,7 @@ def prediccion6(df):
 
     📌 *Recuerda: estas predicciones son una guía, pero no sustituyen la supervisión profesional.*
     """)
+
 
 
 
