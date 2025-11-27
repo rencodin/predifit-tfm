@@ -150,14 +150,16 @@ def histograma_repeticiones(df, ejercicio=None):
 
 # 11. Histograma de peso 
 def histograma_peso(df, ejercicio=None):
-    st.subheader("🏋️ Histograma de carga")
-    if "peso" not in df.columns or df.empty:
-        st.warning("No hay datos de peso disponibles.")
-        return
+    st.subheader(f"🏋️ Histograma de carga {f'({ejercicio})' if ejercicio and ejercicio!='Todos' else ''}")
     pesos = pd.to_numeric(df["peso"], errors="coerce").dropna()
     if pesos.empty:
         st.warning("No hay datos para este ejercicio")
         return
     bins = range(int(pesos.min()), int(pesos.max()) + 2)
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.hist(pesos, bins=bins, color="#F2AB6D
+    ax.hist(pesos, bins=bins, color="#F2AB6D", rwidth=0.85)  # ← aquí estaba el error
+    ax.set_title("Histograma de carga")
+    ax.set_xlabel("Peso (kg)")
+    ax.set_ylabel("Frecuencia")
+    st.pyplot(fig)
+
