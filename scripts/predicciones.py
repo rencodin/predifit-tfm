@@ -109,6 +109,7 @@ def prediccion2(df):
 # -----------------------------
 def prediccion3(df):
     st.subheader("⚠️ Clasificación de fallo técnico por rotación")
+
     if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df.columns):
         st.warning("No hay datos de rotación angular disponibles.")
         return
@@ -116,6 +117,9 @@ def prediccion3(df):
     df_std = df.groupby(["id_ejercicio","serie","repeticiones","semana","peso"]).agg({
         "pitch_grados":"std","roll_grados":"std","yaw_grados":"std"
     }).reset_index()
+
+    # 🔧 Eliminar filas con NaN
+    df_std = df_std.dropna(subset=["pitch_grados","roll_grados","yaw_grados"])
 
     df_std["fallo_tecnico"] = (
         (df_std["pitch_grados"] > 15) |
@@ -125,11 +129,13 @@ def prediccion3(df):
 
     X = df_std[["pitch_grados","roll_grados","yaw_grados"]]
     y = df_std["fallo_tecnico"]
+
     if y.nunique() < 2:
         st.warning("No hay suficiente variación para entrenar el modelo de fallo técnico.")
         return
 
     X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.25,random_state=0)
+
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
@@ -142,6 +148,7 @@ def prediccion3(df):
     st.write("Matriz de confusión:")
     st.write(cm)
     st.text(classification_report(y_test,y_pred))
+
     
     st.markdown("""
     🔍 **¿Cómo interpretar esta predicción?**
@@ -297,3 +304,4 @@ def prediccion6(df):
 
     📌 *Recuerda: estas predicciones son una guía, pero no sustituyen la supervisión profesional.*
     """)
+
