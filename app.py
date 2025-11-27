@@ -103,6 +103,8 @@ if vista == "1️⃣ Carga de datos":
     st.subheader("📂 Opción 1: Usar registro.csv y transformarlo")
     if st.button("Transformar registro.csv"):
         try:
+            # Descargar y cargar desde Google Drive
+            df_registro = cargar_csv_drive(FILE_ID_REGISTRO, "registro.csv")
             df_transformado = transformar_dataset()
             st.success("Transformación completada")
             st.dataframe(df_transformado.head())
@@ -113,8 +115,8 @@ if vista == "1️⃣ Carga de datos":
     st.subheader("📄 Opción 2: Usar directamente registro_def.csv")
     if st.button("Mostrar registro_def.csv sin modificar"):
         try:
-            ruta_csv = os.path.join(BASE_DIR, "data", "registro_def.csv")
-            df_directo = pd.read_csv(ruta_csv)
+            # Descargar y cargar desde Google Drive
+            df_directo = cargar_csv_drive(FILE_ID_REGISTRO_DEF, "registro_def.csv")
             st.success("Dataset cargado correctamente.")
             st.dataframe(df_directo.head())
         except Exception as e:
@@ -126,15 +128,16 @@ if vista == "1️⃣ Carga de datos":
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
 try:
-    ruta_csv = os.path.join(BASE_DIR, "data", "registro_def.csv")
-    df = pd.read_csv(ruta_csv)
+    # Descargar y cargar directamente desde Google Drive
+    df = cargar_csv_drive(FILE_ID_REGISTRO_DEF, "registro_def.csv")
+
     columnas_necesarias = {"ejercicio", "rutina", "peso", "serie", "repeticiones", "semana"}
     if not columnas_necesarias.issubset(df.columns):
         st.error("❌ El archivo cargado no contiene todas las columnas necesarias.")
         st.write("Columnas encontradas:", df.columns.tolist())
         st.stop()
 except Exception as e:
-    st.error(f"No se pudo cargar el archivo: {e}")
+    st.error(f"No se pudo cargar el archivo desde Google Drive: {e}")
     st.stop()
 
 # ==========================
@@ -275,4 +278,5 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
