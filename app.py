@@ -77,13 +77,12 @@ from scripts.predicciones import (
 # ==========================
 @st.cache_data
 def cargar_csv_drive(file_id: str, output_name: str):
-    url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, output_name, quiet=False)
+    url = f"https://drive.google.com/uc?id={file_id}&export=download"
     return pd.read_csv(output_name)
 
 # IDs de tus archivos en Google Drive (cámbialos por los tuyos)
 FILE_ID_REGISTRO = "1mnY7l-2eOWwnF-4b7GaVzh5dWiAI4RYR"
-FILE_ID_REGISTRO_DEF = "14XMSpGrQk30O2bGYdyWiIRH4_Wnag1tAgQJ5H25GgF8"
+FILE_ID_REGISTRO_DEF = "1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP-"
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -104,23 +103,23 @@ if vista == "1️⃣ Carga de datos":
     if st.button("Transformar registro.csv"):
         try:
             # Descargar y cargar desde Google Drive
-            df_registro = cargar_csv_drive(FILE_ID_REGISTRO, "registro.csv")
-            df_transformado = transformar_dataset()
+            df_registro = cargar_csv_drive(FILE_ID_REGISTRO)
+            # Pasar el dataframe a tu función de transformación
+            df_transformado = transformar_dataset()  # si tu función ya lee registro.csv internamente, puedes adaptarla para recibir df_registro
             st.success("Transformación completada")
             st.dataframe(df_transformado.head())
         except Exception as e:
             st.error(f"No se pudo transformar el archivo: {e}")
 
     st.markdown("---")
-    st.subheader("📄 Opción 2: Usar directamente registro_def.csv")
-    if st.button("Mostrar registro_def.csv sin modificar"):
+    st.subheader("📄 Opción 2: Usar directamente registro_def_st.csv")
+    if st.button("Mostrar registro_def_st.csv sin modificar"):
         try:
-            # Descargar y cargar desde Google Drive
-            df_directo = cargar_csv_drive(FILE_ID_REGISTRO_DEF, "registro_def.csv")
-            st.success("Dataset cargado correctamente.")
+            df_directo = cargar_csv_drive(FILE_ID_REGISTRO_DEF)
+            st.success("Dataset cargado correctamente desde Google Drive.")
             st.dataframe(df_directo.head())
         except Exception as e:
-            st.error(f"No se pudo cargar el archivo: {e}")
+            st.error(f"No se pudo cargar el archivo desde Google Drive: {e}")
 
     st.stop()
 
@@ -128,9 +127,7 @@ if vista == "1️⃣ Carga de datos":
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
 try:
-    # Descargar y cargar directamente desde Google Drive
-    df = cargar_csv_drive(FILE_ID_REGISTRO_DEF, "registro_def.csv")
-
+    df = cargar_csv_drive(FILE_ID_REGISTRO_DEF)
     columnas_necesarias = {"ejercicio", "rutina", "peso", "serie", "repeticiones", "semana"}
     if not columnas_necesarias.issubset(df.columns):
         st.error("❌ El archivo cargado no contiene todas las columnas necesarias.")
@@ -278,5 +275,6 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
