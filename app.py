@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-import gdown
 from PIL import Image
 
 # ==========================
@@ -76,9 +75,9 @@ from scripts.predicciones import (
 # FUNCIONES PARA GOOGLE DRIVE
 # ==========================
 @st.cache_data
-def cargar_csv_drive(file_id: str, output_name: str):
+def cargar_csv_drive(file_id: str):
     url = f"https://drive.google.com/uc?id={file_id}&export=download"
-    return pd.read_csv(output_name)
+    return pd.read_csv(url)
 
 # IDs de tus archivos en Google Drive (cámbialos por los tuyos)
 FILE_ID_REGISTRO = "1mnY7l-2eOWwnF-4b7GaVzh5dWiAI4RYR"
@@ -275,6 +274,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
