@@ -277,10 +277,11 @@ def prediccion6(df):
 
     repeticiones = st.number_input("Repeticiones", min_value=1, max_value=50, value=12, key="repes_pred6")
 
-    semanas = sorted(df["semana"].dropna().unique())
-    if not semanas.any():
+    semanas = df["semana"].dropna().unique()
+    if len(semanas) == 0:
         st.warning("No hay semanas disponibles en el dataset.")
         return
+    semanas = sorted(semanas)
 
     predicciones = [model.predict([[s, ejercicio_id, repeticiones]])[0] for s in semanas]
 
@@ -304,4 +305,5 @@ def prediccion6(df):
 
     📌 *Recuerda: estas predicciones son una guía, pero no sustituyen la supervisión profesional.*
     """)
+
 
