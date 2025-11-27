@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import gdown
 from PIL import Image
 
 # ==========================
@@ -70,6 +71,19 @@ from scripts.eda_analisis import (
 from scripts.predicciones import (
     prediccion1, prediccion2, prediccion3, prediccion4, prediccion5, prediccion6
 )
+
+# ==========================
+# FUNCIONES PARA GOOGLE DRIVE
+# ==========================
+@st.cache_data
+def cargar_csv_drive(file_id: str, output_name: str):
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, output_name, quiet=False)
+    return pd.read_csv(output_name)
+
+# IDs de tus archivos en Google Drive (cámbialos por los tuyos)
+FILE_ID_REGISTRO = "1mnY7l-2eOWwnF-4b7GaVzh5dWiAI4RYR"
+FILE_ID_REGISTRO_DEF = "14XMSpGrQk30O2bGYdyWiIRH4_Wnag1tAgQJ5H25GgF8"
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -261,3 +275,4 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
