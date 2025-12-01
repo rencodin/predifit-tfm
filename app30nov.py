@@ -75,13 +75,12 @@ from scripts.predicciones import (
 # FUNCIONES PARA GOOGLE DRIVE
 # ==========================
 @st.cache_data
-def cargar_csv_drive(file_id: str):
-    url = f"https://drive.google.com/uc?id={file_id}&export=download"
-    return pd.read_csv(url)
+def cargar_csv_kaggle(path: str):
+    return pd.read_csv(path)
 
-# IDs de tus archivos en Google Drive (cámbialos por los tuyos)
-FILE_ID_REGISTRO = "1mnY7l-2eOWwnF-4b7GaVzh5dWiAI4RYR"
-FILE_ID_REGISTRO_DEF = "1cJ6u-_mXbdMMPO-o2QqG4wU160YK1pP-"
+# Rutas de Kaggle
+FILE_PATH_REGISTRO = "/kaggle/input/registro/registro.csv"
+FILE_PATH_REGISTRO_DEF = "/kaggle/input/registro-def/registro_def.csv"
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -102,7 +101,7 @@ if vista == "1️⃣ Carga de datos":
     if st.button("Transformar registro.csv"):
         try:
             # Descargar y cargar desde Google Drive
-            df_registro = cargar_csv_drive(FILE_ID_REGISTRO)
+            df_registro = cargar_csv_kaggle(FILE_PATH_REGISTRO)
             # Pasar el dataframe a tu función de transformación
             df_transformado = transformar_dataset()  # si tu función ya lee registro.csv internamente, puedes adaptarla para recibir df_registro
             st.success("Transformación completada")
@@ -114,7 +113,7 @@ if vista == "1️⃣ Carga de datos":
     st.subheader("📄 Opción 2: Usar directamente registro_def_st.csv")
     if st.button("Mostrar registro_def_st.csv sin modificar"):
         try:
-            df_directo = cargar_csv_drive(FILE_ID_REGISTRO_DEF)
+            df_registro_def = cargar_csv_kaggle(FILE_PATH_REGISTRO_DEF)
             st.success("Dataset cargado correctamente desde Google Drive.")
             st.dataframe(df_directo.head())
         except Exception as e:
@@ -126,7 +125,7 @@ if vista == "1️⃣ Carga de datos":
 # CARGAR DATOS PARA VISTA 2 Y 3
 # ==========================
 try:
-    df = cargar_csv_drive(FILE_ID_REGISTRO_DEF)
+    df = cargar_csv_kaggle(FILE_PATH_REGISTRO_DEF)
     columnas_necesarias = {"ejercicio", "rutina", "peso", "serie", "repeticiones", "semana"}
     if not columnas_necesarias.issubset(df.columns):
         st.error("❌ El archivo cargado no contiene todas las columnas necesarias.")
@@ -274,6 +273,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
