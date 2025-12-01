@@ -75,12 +75,13 @@ from scripts.predicciones import (
 # FUNCIONES PARA GOOGLE DRIVE
 # ==========================
 @st.cache_data
-def cargar_csv_kaggle(path: str):
-    return pd.read_csv(path)
+def cargar_csv_kaggle(slug: str, filename: str):
+    import kaggle
+    kaggle.api.dataset_download_file(slug, filename, path="data", force=True)
+    return pd.read_csv(os.path.join("data", filename))
 
-# Rutas de Kaggle
-FILE_PATH_REGISTRO = "https://www.kaggle.com/datasets/datafriki/registro"
-FILE_PATH_REGISTRO_DEF = "https://www.kaggle.com/datasets/datafriki/registro-def"
+FILE_PATH_REGISTRO = cargar_csv_kaggle("datafriki/registro", "registro.csv")
+FILE_PATH_REGISTRO_DEF = cargar_csv_kaggle("datafriki/registro-def", "registro_def.csv")
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -273,6 +274,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
