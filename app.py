@@ -77,11 +77,15 @@ from scripts.predicciones import (
 @st.cache_data
 def cargar_csv_kaggle(slug: str, filename: str):
     import kaggle
-    kaggle.api.dataset_download_file(slug, filename, path="data", force=True)
-    return pd.read_csv(os.path.join("data", filename))
+    data_dir = "data"
+    os.makedirs(data_dir, exist_ok=True)
+    kaggle.api.dataset_download_file(slug, filename, path=data_dir, force=True)
+    file_path = os.path.join(data_dir, filename)
+    return pd.read_csv(file_path)
 
-FILE_PATH_REGISTRO = cargar_csv_kaggle("datafriki/registro", "registro.csv")
-FILE_PATH_REGISTRO_DEF = cargar_csv_kaggle("datafriki/registro-def", "registro_def.csv")
+df_registro = cargar_csv_kaggle("datafriki/registro", "registro.csv")
+df_registro_def = cargar_csv_kaggle("datafriki/registro-def", "registro_def.csv")
+
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -274,6 +278,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
