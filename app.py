@@ -79,8 +79,8 @@ def cargar_csv_kaggle(path: str):
     return pd.read_csv(path)
 
 # Rutas de Kaggle
-FILE_PATH_REGISTRO = "/kaggle/input/registro/registro.csv"
-FILE_PATH_REGISTRO_DEF = "/kaggle/input/registro-def/registro_def.csv"
+FILE_PATH_REGISTRO = "https://www.kaggle.com/datasets/datafriki/registro"
+FILE_PATH_REGISTRO_DEF = "https://www.kaggle.com/datasets/datafriki/registro-def"
 
 # ==========================
 # SIDEBAR: Navegación y filtros
@@ -273,6 +273,7 @@ if vista == "3️⃣ Predicciones":
     prediccion4(df_filtrado)
     prediccion5(df_filtrado)
     prediccion6(df_filtrado)
+
 
 
 
