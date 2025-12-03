@@ -8,6 +8,3 @@ xgboost>=1.7.0
 Pillow>=9.5.0
 gdown>=4.7.1
 kaggle
-
-
-
