@@ -18,7 +18,7 @@ URL para acceder ! ---> https://predifit-tfm-4srjsmn48dse4nqtke5yfs.streamlit.ap
   
 ⚠️ Recomendaciones de uso
 
-💡 Mejor testeo en local: se recomienda descargar el contenido de la carpeta version_local para trabajar con datasets completos y obtener un rendimiento óptimo.
+💡 Mejor testeo en local: se recomienda con el contenido completo en local para obtener un rendimiento óptimo.
 
 - Versión en GitHub: está optimizada para mostrar el estado del arte del proyecto, pero no incluye el dataset completo por limitaciones de la plataforma. Se filtran por las dos primeras semanas de entrenamiento.
 
@@ -32,7 +32,7 @@ URL para acceder ! ---> https://predifit-tfm-4srjsmn48dse4nqtke5yfs.streamlit.ap
 
 - Los filtros aplicados en el menú lateral de la app modificarán dinámicamente los resultados del análisis, por lo que cada ejecución puede mostrar salidas distintas.
 
-👉 Conclusión: para un análisis completo y fluido, se recomienda TRABAJAR en LOCAL con la carpeta version_local.
+👉 Conclusión: para un análisis completo y fluido, se recomienda TRABAJAR en LOCAL.
 
 Versiones disponibles
 
