@@ -1,4 +1,4 @@
-# Predifit - Web App de Análisis de Entrenamiento 
+# Predifit - Web App de Análisis de Entrenamiento assets/predifit_oscuro.png
 ## Trabajo Fin de Máster "Análisis Predictivo del Rendimiento en Entrenamiento de Fuerza mediante Machine Learning" - IMF Business School
 ## Autora: Renata Flores Hidalgo
 
@@ -9,7 +9,7 @@ Predifit es una aplicación web diseñada para:
 - Carga de datos desde Apple Watch: permite adjuntar registros de entrenamiento obtenidos desde el dispositivo.
 - Interfaz interactiva: visualización y análisis de métricas de rendimiento en tiempo real.
 - Dataset de prueba: incluye el conjunto de datos final utilizado en el TFM.
- !!! Atención: El archivo CSV "registro_def.csv" ocupa aproximadamente 200 MB, por lo que se recomienda trabajar en local para un mejor rendimiento.
+  ¡¡¡ Atención: El archivo CSV "registro_def.csv" ocupa aproximadamente 200 MB, por lo que se recomienda trabajar en local para un mejor rendimiento, tanto para visualización del Análisis Exploratorio de Datos como las Predicciones realizadas !!!
 
 Versiones disponibles
 - Versión sin modificar: dataset completo original -> "registro.csv"
