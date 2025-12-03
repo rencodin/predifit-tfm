@@ -24,15 +24,15 @@ URL para acceder ! ---> https://predifit-tfm-4srjsmn48dse4nqtke5yfs.streamlit.ap
 
 - Archivo CSV grande: el fichero registro_def.csv ocupa aproximadamente 200 MB, por lo que es preferible trabajar en local para visualizar correctamente el Análisis Exploratorio de Datos (EDA) y las Predicciones.
 
-- No usar la opción 1: la pestaña “Opción 1: Usar registro.csv y transformarlo” carga un dataset en LFS (no en CSV estándar). Aunque puede visualizarse en la carpeta data en formato raw, supera el límite permitido por GitHub.
+- No usar la opción 1: en la primera vista "1️⃣ Carga de datos", la pestaña “Opción 1: Usar registro.csv y transformarlo” carga un dataset en LFS (no en CSV estándar). Aunque puede visualizarse en la carpeta data en formato raw, supera el límite permitido por GitHub.
 
 ❗ Limitaciones en la versión online:
 
-- En las vistas “Análisis EDA” y “Predicciones” solo se muestran resultados parciales, ya que se trabaja con las dos primeras semanas del registro de entrenamiento.
+- En las vistas “2️⃣ Análisis EDA” y “3️⃣ Predicciones” solo se muestran resultados parciales, ya que se trabaja con las dos primeras semanas del registro de entrenamiento.
 
-- Los filtros aplicados modificarán dinámicamente los resultados del análisis, por lo que cada ejecución puede mostrar salidas distintas.
+- Los filtros aplicados en el menú lateral de la app modificarán dinámicamente los resultados del análisis, por lo que cada ejecución puede mostrar salidas distintas.
 
-👉 Conclusión: para un análisis completo y fluido, se recomienda trabajar en local con la carpeta version_local.
+👉 Conclusión: para un análisis completo y fluido, se recomienda TRABAJAR en LOCAL con la carpeta version_local.
 
 Versiones disponibles
 
