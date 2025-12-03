@@ -1,5 +1,4 @@
 # Predifit - Web App de Análisis de Entrenamiento ![LogoPredifit](assets/predifit_oscuro.png)
-assets/predifit_oscuro.png
 ## Trabajo Fin de Máster "Análisis Predictivo del Rendimiento en Entrenamiento de Fuerza mediante Machine Learning" - IMF Business School
 ## Autora: Renata Flores Hidalgo
 
