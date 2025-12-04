@@ -24,32 +24,32 @@ def obtener_diccionario_ejercicios(df):
 # Cache de entrenamiento modelos
 # -----------------------------
 @st.cache_data
-def entrenar_xgb(df):
+def entrenar_xgb(df_filtrado):
     if not {"peso","semana","id_ejercicio","repeticiones"}.issubset(df.columns):
         return None, {}
-    df = df.dropna(subset=["peso", "semana", "id_ejercicio", "repeticiones"])
-    X = df[["semana", "id_ejercicio", "repeticiones"]]
-    y = df["peso"]
+    df_filtrado = df_filtrado.dropna(subset=["peso", "semana", "id_ejercicio", "repeticiones"])
+    X = df_filtrado[["semana", "id_ejercicio", "repeticiones"]]
+    y = df_filtrado["peso"]
     model = XGBRegressor(n_estimators=100, random_state=42)
     model.fit(X, y)
-    return model, obtener_diccionario_ejercicios(df)
+    return model, obtener_diccionario_ejercicios(df_filtrado)
 
 @st.cache_data
-def entrenar_lr(df):
-    if not {"id_ejercicio","peso","serie","repeticiones","semana","duracion_media"}.issubset(df.columns):
+def entrenar_lr(df_filtrado):
+    if not {"id_ejercicio","peso","serie","repeticiones","semana","duracion_media"}.issubset(df_filtrado.columns):
         return None, {}
-    X = df[["id_ejercicio", "peso", "serie", "repeticiones", "semana"]]
-    y = df["duracion_media"]
+    X = df_filtrado[["id_ejercicio", "peso", "serie", "repeticiones", "semana"]]
+    y = df_filtrado["duracion_media"]
     model = LinearRegression()
     model.fit(X, y)
-    return model, obtener_diccionario_ejercicios(df)
+    return model, obtener_diccionario_ejercicios(df_filtrado)
 
 # -----------------------------
 # 1. Predicción de carga (peso)
 # -----------------------------
-def prediccion1(df):
+def prediccion1(df_filtrado):
     st.subheader("📌 Predicción de carga (peso) con XGBoost")
-    model, ejercicios_dict = entrenar_xgb(df)
+    model, ejercicios_dict = entrenar_xgb(df_filtrado)
     if model is None:
         st.warning("No hay columnas suficientes para entrenar el modelo de carga.")
         return
@@ -77,9 +77,9 @@ def prediccion1(df):
 # -----------------------------
 # 2. Predicción de duración media
 # -----------------------------
-def prediccion2(df):
+def prediccion2(df_filtrado):
     st.subheader("⏱️ Predicción de duración media con regresión")
-    model, ejercicios_dict = entrenar_lr(df)
+    model, ejercicios_dict = entrenar_lr(df_filtrado)
     if model is None:
         st.warning("No hay columnas suficientes para entrenar el modelo de duración.")
         return
@@ -110,28 +110,28 @@ def prediccion2(df):
 # -----------------------------
 # 3. Clasificación de fallo técnico
 # -----------------------------
-def prediccion3(df):
+def prediccion3(df_filtrado):
     st.subheader("⚠️ Clasificación de fallo técnico por rotación")
 
     if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df.columns):
         st.warning("No hay datos de rotación angular disponibles.")
         return
 
-    df_std = df.groupby(["id_ejercicio","serie","repeticiones","semana","peso"]).agg({
+    df_filtrado_std = df_filtrado.groupby(["id_ejercicio","serie","repeticiones","semana","peso"]).agg({
         "pitch_grados":"std","roll_grados":"std","yaw_grados":"std"
     }).reset_index()
 
     # 🔧 Eliminar filas con NaN
-    df_std = df_std.dropna(subset=["pitch_grados","roll_grados","yaw_grados"])
+    df_filtrado_std = df_std.dropna(subset=["pitch_grados","roll_grados","yaw_grados"])
 
-    df_std["fallo_tecnico"] = (
-        (df_std["pitch_grados"] > 15) |
-        (df_std["roll_grados"] > 15) |
-        (df_std["yaw_grados"] > 15)
+    df_filtrado_std["fallo_tecnico"] = (
+        (df_filtrado_std["pitch_grados"] > 15) |
+        (df_filtrado_std["roll_grados"] > 15) |
+        (df_filtrado_std["yaw_grados"] > 15)
     ).astype(int)
 
-    X = df_std[["pitch_grados","roll_grados","yaw_grados"]]
-    y = df_std["fallo_tecnico"]
+    X = df_filtrado_std[["pitch_grados","roll_grados","yaw_grados"]]
+    y = df_filtrado_std["fallo_tecnico"]
 
     if y.nunique() < 2:
         st.warning("No hay suficiente variación para entrenar el modelo de fallo técnico.")
@@ -173,13 +173,13 @@ def prediccion3(df):
 # -----------------------------
 # 4. PCA de rotaciones
 # -----------------------------
-def prediccion4(df):
+def prediccion4(df_filtrado):
     st.subheader("📐 PCA de rotaciones angulares")
-    if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df.columns):
+    if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df_filtrado.columns):
         st.warning("No hay datos de rotación angular disponibles.")
         return
 
-    X = df[["pitch_grados","roll_grados","yaw_grados"]].dropna()
+    X = df_filtrado[["pitch_grados","roll_grados","yaw_grados"]].dropna()
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
@@ -213,32 +213,32 @@ def prediccion4(df):
 # -----------------------------
 # 5. Clustering de series
 # -----------------------------
-def prediccion5(df):
+def prediccion5(df_filtrado):
     st.subheader("🧠 Clustering de series (K-Means + PCA)")
     if not {"duracion_media","volumen_total"}.issubset(df.columns):
         st.warning("No hay columnas suficientes para clustering.")
         return
 
-    df = df.copy()
-    df["velocidad"] = 1 / df["duracion_media"]
+    df_filtrado = df_filtrado.copy()
+    df_filtrado["velocidad"] = 1 / df_filtrado["duracion_media"]
     features = ["duracion_media","velocidad","volumen_total"]
-    X = df[features].dropna()
+    X = df_filtrado[features].dropna()
 
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
     kmeans = KMeans(n_clusters=3,random_state=42,n_init=10)
-    df["cluster"] = kmeans.fit_predict(X_scaled)
+    df_filtrado["cluster"] = kmeans.fit_predict(X_scaled)
 
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
     centroids_pca = pca.transform(kmeans.cluster_centers_)
 
-    df_plot = pd.DataFrame(X_pca,columns=["PCA 1","PCA 2"])
-    df_plot["cluster"] = df["cluster"]
+    df_filtrado_plot = pd.DataFrame(X_pca,columns=["PCA 1","PCA 2"])
+    df_filtrado_plot["cluster"] = df_filtrado["cluster"]
 
     fig, ax = plt.subplots(figsize=(8,5))
-    sns.scatterplot(x="PCA 1",y="PCA 2",hue="cluster",data=df_plot,palette="tab10",s=60)
+    sns.scatterplot(x="PCA 1",y="PCA 2",hue="cluster",data=df_filtrado_plot,palette="tab10",s=60)
     ax.scatter(centroids_pca[:,0],centroids_pca[:,1],marker="*",s=250,color="black",label="Centros")
     ax.set_title("Clusters K-Means de series")
     ax.legend()
@@ -263,7 +263,7 @@ def prediccion5(df):
 # -----------------------------
 # 6. Histograma de carga estimada por semana
 # -----------------------------
-def prediccion6(df):
+def prediccion6(df_filtrado):
     st.subheader("📊 Histograma de carga estimada por semana")
 
     model, ejercicios_dict = entrenar_xgb(df)
@@ -280,7 +280,7 @@ def prediccion6(df):
 
     repeticiones = st.number_input("Repeticiones", min_value=1, max_value=50, value=12, key="repes_pred6")
 
-    semanas = df["semana"].dropna().unique()
+    semanas = df_filtrado["semana"].dropna().unique()
     if len(semanas) == 0:
         st.warning("No hay semanas disponibles en el dataset.")
         return
@@ -309,8 +309,38 @@ def prediccion6(df):
     📌 *Recuerda: estas predicciones son una guía, pero no sustituyen la supervisión profesional.*
     """)
 
+# -----------------------------
+# Menú de selección de predicciones
+# -----------------------------
+def menu_predicciones(df_filtrado):
+    st.title("Menú de Predicciones")
 
+    opciones = [
+        "Predicción 1: Carga",
+        "Predicción 2: Duración",
+        "Predicción 3: Fallo técnico",
+        "Predicción 4: PCA rotaciones",
+        "Predicción 5: Clustering series",
+        "Predicción 6: Histograma carga"
+    ]
 
+    # Guardar selección en session_state para que no se pierda al interactuar
+    seleccion = st.radio(
+        "👉 Selecciona la predicción que quieres ejecutar:",
+        opciones,
+        key="prediccion_seleccionada"
+    )
 
-
-
+    # Usamos directamente el valor guardado en session_state
+    if st.session_state.prediccion_seleccionada == "Predicción 1: Carga":
+        prediccion1(df_filtrado)
+    elif st.session_state.prediccion_seleccionada == "Predicción 2: Duración":
+        prediccion2(df_filtrado)
+    elif st.session_state.prediccion_seleccionada == "Predicción 3: Fallo técnico":
+        prediccion3(df_filtrado)
+    elif st.session_state.prediccion_seleccionada == "Predicción 4: PCA rotaciones":
+        prediccion4(df_filtrado)
+    elif st.session_state.prediccion_seleccionada == "Predicción 5: Clustering series":
+        prediccion5(df_filtrado)
+    elif st.session_state.prediccion_seleccionada == "Predicción 6: Histograma carga":
+        prediccion6(df_filtrado)
