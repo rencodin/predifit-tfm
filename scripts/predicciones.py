@@ -25,7 +25,7 @@ def obtener_diccionario_ejercicios(df):
 # -----------------------------
 @st.cache_data
 def entrenar_xgb(df_filtrado):
-    if not {"peso","semana","id_ejercicio","repeticiones"}.issubset(df.columns):
+    if not {"peso","semana","id_ejercicio","repeticiones"}.issubset(df_filtrado.columns):
         return None, {}
     df_filtrado = df_filtrado.dropna(subset=["peso", "semana", "id_ejercicio", "repeticiones"])
     X = df_filtrado[["semana", "id_ejercicio", "repeticiones"]]
@@ -344,3 +344,4 @@ def menu_predicciones(df_filtrado):
         prediccion5(df_filtrado)
     elif st.session_state.prediccion_seleccionada == "Predicción 6: Histograma carga":
         prediccion6(df_filtrado)
+
