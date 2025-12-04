@@ -13,10 +13,10 @@ from sklearn.cluster import KMeans
 # -----------------------------
 # Diccionario ejercicio → id
 # -----------------------------
-def obtener_diccionario_ejercicios(df):
-    if not {"ejercicio","id_ejercicio"}.issubset(df.columns):
+def obtener_diccionario_ejercicios(df_filtrado):
+    if not {"ejercicio","id_ejercicio"}.issubset(df_filtrado.columns):
         return {}
-    return df.dropna(subset=["ejercicio", "id_ejercicio"])\
+    return df_filtrado.dropna(subset=["ejercicio", "id_ejercicio"])\
              .drop_duplicates(subset=["ejercicio"])\
              .set_index("ejercicio")["id_ejercicio"].to_dict()
 
@@ -344,5 +344,6 @@ def menu_predicciones(df_filtrado):
         prediccion5(df_filtrado)
     elif st.session_state.prediccion_seleccionada == "Predicción 6: Histograma carga":
         prediccion6(df_filtrado)
+
 
 
