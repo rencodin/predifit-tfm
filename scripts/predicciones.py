@@ -215,7 +215,7 @@ def prediccion4(df_filtrado):
 # -----------------------------
 def prediccion5(df_filtrado):
     st.subheader("🧠 Clustering de series (K-Means + PCA)")
-    if not {"duracion_media","volumen_total"}.issubset(df.columns):
+    if not {"duracion_media","volumen_total"}.issubset(df_filtrado.columns):
         st.warning("No hay columnas suficientes para clustering.")
         return
 
@@ -266,7 +266,7 @@ def prediccion5(df_filtrado):
 def prediccion6(df_filtrado):
     st.subheader("📊 Histograma de carga estimada por semana")
 
-    model, ejercicios_dict = entrenar_xgb(df)
+    model, ejercicios_dict = entrenar_xgb(df_filtrado)
     if model is None:
         st.warning("No hay columnas suficientes para entrenar el modelo de carga.")
         return
@@ -344,6 +344,3 @@ def menu_predicciones(df_filtrado):
         prediccion5(df_filtrado)
     elif st.session_state.prediccion_seleccionada == "Predicción 6: Histograma carga":
         prediccion6(df_filtrado)
-
-
-
