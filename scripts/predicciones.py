@@ -113,7 +113,7 @@ def prediccion2(df_filtrado):
 def prediccion3(df_filtrado):
     st.subheader("⚠️ Clasificación de fallo técnico por rotación")
 
-    if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df.columns):
+    if not {"pitch_grados","roll_grados","yaw_grados"}.issubset(df_filtrado.columns):
         st.warning("No hay datos de rotación angular disponibles.")
         return
 
@@ -122,7 +122,7 @@ def prediccion3(df_filtrado):
     }).reset_index()
 
     # 🔧 Eliminar filas con NaN
-    df_filtrado_std = df_std.dropna(subset=["pitch_grados","roll_grados","yaw_grados"])
+    df_filtrado_std = df_filtrado_std.dropna(subset=["pitch_grados","roll_grados","yaw_grados"])
 
     df_filtrado_std["fallo_tecnico"] = (
         (df_filtrado_std["pitch_grados"] > 15) |
@@ -344,4 +344,5 @@ def menu_predicciones(df_filtrado):
         prediccion5(df_filtrado)
     elif st.session_state.prediccion_seleccionada == "Predicción 6: Histograma carga":
         prediccion6(df_filtrado)
+
 
