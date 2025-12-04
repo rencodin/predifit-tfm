@@ -67,9 +67,7 @@ from scripts.eda_analisis import (
     grafico_duracion_media, grafico_duracion_por_semana, grafico_repes_por_semana,
     grafico_aceleracion, boxplot_pitch_roll, histograma_repeticiones, histograma_peso
 )
-from scripts.predicciones import (
-    prediccion1, prediccion2, prediccion3, prediccion4, prediccion5, prediccion6
-)
+from scripts.predicciones import menu_predicciones
 
 # ==========================
 # FUNCIONES PARA GOOGLE DRIVE
@@ -268,15 +266,5 @@ if vista == "3️⃣ Predicciones":
     # Aquí podrías añadir filtros específicos si lo deseas
     # filtro_pred = st.sidebar.selectbox("Filtro específico:", ["Todos", "Alta carga", "Baja carga"])
 
-    prediccion1(df_filtrado)
-    prediccion2(df_filtrado)
-    prediccion3(df_filtrado)
-    prediccion4(df_filtrado)
-    prediccion5(df_filtrado)
-    prediccion6(df_filtrado)
-
-
-
-
-
-
+    # Mostrar menú
+    menu_predicciones(df_filtrado)
